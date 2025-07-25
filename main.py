@@ -1,5 +1,5 @@
 from retrievers.hybrid_retriever import unified_hybrid_search
-from utils.fusion import reciprocal_rank_fusion
+from utils.fusion import weighted_rrf
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -9,7 +9,7 @@ def test_hybrid_rag(query, top_k_per_source=3, final_top_k=10):
     logger.info(f"Performing unified hybrid retrieval for query: '{query}'")
     results = unified_hybrid_search(query, top_k_per_source=top_k_per_source)
     logger.info("Performing reciprocal rank fusion")
-    fused_results = reciprocal_rank_fusion(results, top_k=final_top_k)
+    fused_results = weighted_rrf(results, top_k=final_top_k)
 
     print(f"\n--- Final Hybrid RAG Results for '{query}' ---\n")
     for idx, res in enumerate(fused_results, 1):

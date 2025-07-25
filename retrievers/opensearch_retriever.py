@@ -3,12 +3,8 @@ from opensearchpy import OpenSearch
 from dotenv import load_dotenv
 from embeddings.text_embeddings import embed_text
 from config.db_config import OPENSEARCH_INDEX_CONFIG
-import logging
 
 load_dotenv()
-
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-logger = logging.getLogger("OpenSearch")
 
 OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST")
 
@@ -70,7 +66,6 @@ def hybrid_search(index_name, query, top_k=5, semantic_weight=0.7, keyword_weigh
     keyword_normalized = normalize_scores(keyword_results)
 
     if not semantic_normalized and not keyword_normalized:
-        logger.warning(f"No semantic or keyword results for '{index_name}'.")
         return []
 
     results_dict = {}
@@ -89,5 +84,4 @@ def hybrid_search(index_name, query, top_k=5, semantic_weight=0.7, keyword_weigh
             results_dict[doc_id] = {"source": res["source"], "score": score}
 
     combined_results = sorted(results_dict.values(), key=lambda x: x["score"], reverse=True)
-    logger.info(f"Hybrid normalized results for '{index_name}': {combined_results[:top_k]}")
     return combined_results[:top_k]

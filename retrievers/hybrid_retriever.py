@@ -64,7 +64,7 @@ def unified_hybrid_search(query, top_k_per_source=3):
                         "score": score  # similarity score provided by Neo4j
                     })
             except Exception as e:
-                print(f"Neo4j Error on {category}.{node_label}: {e}")
+                logger.error(f"Neo4j Error on {category}.{node_label}: {e}")
 
     logger.info(f"Total combined results before fusion: {len(results)}")
     return results
